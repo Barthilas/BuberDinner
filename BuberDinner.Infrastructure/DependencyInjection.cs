@@ -4,6 +4,8 @@ using BuberDinner.Infrastructure.Authentication;
 using BuberDinner.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using BuberDinner.Application.Common.Interfaces.Persistence;
+using BuberDinner.Infrastructure.Persistence;
 
 namespace BuberDinner.Infrastructure
 {
@@ -17,6 +19,8 @@ namespace BuberDinner.Infrastructure
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
+            services.AddScoped<IUserRepository, UserRepository>(); 
             return services;
         }
     }
