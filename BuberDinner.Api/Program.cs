@@ -1,8 +1,10 @@
 
+using BuberDinner.Api.Errors;
 using BuberDinner.Api.Filters;
 using BuberDinner.Api.Middleware;
 using BuberDinner.Application;
 using BuberDinner.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -16,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
         // Add globaly doesnt need to be added to every single each controller/method.
         // options.Filters.Add<ErrorHandlingFilterAttribute>();
     });
+    //Override default problemsFactory.
+    builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
 }
 
 
