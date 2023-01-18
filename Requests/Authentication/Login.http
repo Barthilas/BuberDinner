@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
     "email": "neco@neco.cz",
-    "password": "salty"
+    "password": "saltsy"
 }
 
 ### next request

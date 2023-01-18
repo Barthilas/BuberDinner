@@ -1,9 +1,10 @@
 
-using BuberDinner.Api.Errors;
+using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Filters;
 using BuberDinner.Api.Middleware;
 using BuberDinner.Application;
 using BuberDinner.Infrastructure;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
         // Add globaly doesnt need to be added to every single each controller/method.
         // options.Filters.Add<ErrorHandlingFilterAttribute>();
     });
-    //Override default problemsFactory.
+    //Override default problemsFactory for third approach.
     builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
 }
 
@@ -31,6 +32,13 @@ var app = builder.Build();
 
     // Third approach for errors.
     app.UseExceptionHandler("/error");
+
+    // Without controller 
+    // app.Map("/error", (HttpContext httpContext) => {
+    //     Exception? exception = httpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
+    //     return Results.Problem();
+    // });
+
     app.UseHttpsRedirection();
 
     app.MapControllers();
