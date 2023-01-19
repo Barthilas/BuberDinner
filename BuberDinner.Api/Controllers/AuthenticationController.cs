@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using BuberDinner.Api.Filters;
 using BuberDinner.Application.Common.Errors;
 using BuberDinner.Application.Services.Authentication;
+using BuberDinner.Application.Services.Authentication.Commands;
+using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Queries;
 using BuberDinner.Contracts.Authentication;
 using ErrorOr;
 using FluentResults;
@@ -19,22 +22,25 @@ namespace BuberDinner.Api.Controllers
     // [ErrorHandlingFilter]
     public class AuthenticationController : ApiController
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationCommandService _authenticationCommandService;
+        private readonly IAuthenticationQueryService _authenticationQueryService;
         private readonly ILogger<AuthenticationController> _logger;
 
         public AuthenticationController(
             ILogger<AuthenticationController> logger,
-            IAuthenticationService authService)
+            IAuthenticationQueryService authQueryService,
+            IAuthenticationCommandService authCommandService)
         {
             _logger = logger;
-            _authenticationService = authService;
+            _authenticationCommandService = authCommandService;
+            _authenticationQueryService = authQueryService;
         }
 
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest request)
         {
             //ErrorOr
-            ErrorOr<AuthenticationResult> registerResult = _authenticationService.Register(
+            ErrorOr<AuthenticationResult> registerResult = _authenticationCommandService.Register(
                 request.FirstName,
                 request.LastName,
                 request.Email,
@@ -94,7 +100,7 @@ namespace BuberDinner.Api.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginRequest request)
         {
-            var authResult = _authenticationService.Login(
+            var authResult = _authenticationQueryService.Login(
               request.Email,
               request.Password);
 

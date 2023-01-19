@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BuberDinner.Application.Common.Errors;
+using BuberDinner.Application.Services.Authentication.Common;
 using ErrorOr;
 using FluentResults;
 using OneOf;
 
-namespace BuberDinner.Application.Services.Authentication
+namespace BuberDinner.Application.Services.Authentication.Commands
 {
-    public interface IAuthenticationService
+    // CQRS - register is command as it changes/mutates the structure of data (DB).
+    public interface IAuthenticationCommandService
     {
         // AuthenticationResult Register(string firstName, string lastName, string email, string password);
         // bad scalability (tho)
@@ -22,10 +24,6 @@ namespace BuberDinner.Application.Services.Authentication
         // Result<AuthenticationResult> Register(string firstName, string lastName, string email, string password);
 
         // ErrorOr
-        ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password);
-
-
-        ErrorOr<AuthenticationResult> Login(string email, string password);
-       
+        ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password);       
     }
 }

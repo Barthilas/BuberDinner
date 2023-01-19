@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BuberDinner.Domain.Entities;
 
-namespace BuberDinner.Application.Services.Authentication
+namespace BuberDinner.Application.Services.Authentication.Common
 {
     public record AuthenticationResult
     (
