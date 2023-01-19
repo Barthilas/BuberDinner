@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BuberDinner.Application.Services.Authentication.Commands;
 using BuberDinner.Application.Services.Authentication.Queries;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuberDinner.Application
@@ -12,8 +13,10 @@ namespace BuberDinner.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationQueryService, AuthenticationQueryService>();
-            services.AddScoped<IAuthenticationCommandService, AuthenticationCommandService>();
+            services.AddMediatR(typeof(DependencyInjection).Assembly);
+            // Mediator replaced.
+            // services.AddScoped<IAuthenticationQueryService, AuthenticationQueryService>();
+            // services.AddScoped<IAuthenticationCommandService, AuthenticationCommandService>();
             return services;
         }
     }

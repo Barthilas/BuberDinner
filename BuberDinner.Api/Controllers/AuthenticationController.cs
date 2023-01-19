@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using BuberDinner.Api.Filters;
+using BuberDinner.Application.Authentication.Commands.Register;
+using BuberDinner.Application.Authentication.Queries.Login;
 using BuberDinner.Application.Common.Errors;
 using BuberDinner.Application.Services.Authentication;
 using BuberDinner.Application.Services.Authentication.Commands;
@@ -12,6 +14,7 @@ using BuberDinner.Application.Services.Authentication.Queries;
 using BuberDinner.Contracts.Authentication;
 using ErrorOr;
 using FluentResults;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OneOf;
@@ -22,29 +25,42 @@ namespace BuberDinner.Api.Controllers
     // [ErrorHandlingFilter]
     public class AuthenticationController : ApiController
     {
+        
+        // Mediator implements sender.
+        private readonly ISender _mediator;
         private readonly IAuthenticationCommandService _authenticationCommandService;
         private readonly IAuthenticationQueryService _authenticationQueryService;
         private readonly ILogger<AuthenticationController> _logger;
 
         public AuthenticationController(
-            ILogger<AuthenticationController> logger,
-            IAuthenticationQueryService authQueryService,
-            IAuthenticationCommandService authCommandService)
+            ILogger<AuthenticationController> logger, ISender mediator)
         {
             _logger = logger;
-            _authenticationCommandService = authCommandService;
-            _authenticationQueryService = authQueryService;
+            _mediator = mediator;
+
+            // Replaced by Mediator.
+            // _authenticationCommandService = authCommandService;
+            // _authenticationQueryService = authQueryService;
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
-            //ErrorOr
-            ErrorOr<AuthenticationResult> registerResult = _authenticationCommandService.Register(
+            //Mediator way.
+            var command = new RegisterCommand(
                 request.FirstName,
                 request.LastName,
                 request.Email,
                 request.Password);
+            
+            ErrorOr<AuthenticationResult> registerResult = await _mediator.Send(command);
+            
+            //ErrorOr
+            // ErrorOr<AuthenticationResult> registerResult = _authenticationCommandService.Register(
+            //     request.FirstName,
+            //     request.LastName,
+            //     request.Email,
+            //     request.Password);
 
             return registerResult.Match(
                 authResult => Ok(MapAuthResult(authResult)),
@@ -98,11 +114,15 @@ namespace BuberDinner.Api.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            var authResult = _authenticationQueryService.Login(
-              request.Email,
-              request.Password);
+            var query = new LoginQuery(request.Email, request.Password);
+            var authResult = await _mediator.Send(query);
+
+            #region  Pre-Mediator
+            // var authResult = _authenticationQueryService.Login(
+            //   request.Email,
+            //   request.Password);
 
             // Specific handle without using ApiController.
             if (authResult.IsError
@@ -119,6 +139,7 @@ namespace BuberDinner.Api.Controllers
                 errors => Problem(errors)
 
             );
+            #endregion
         }
 
         private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
