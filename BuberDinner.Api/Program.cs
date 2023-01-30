@@ -1,26 +1,23 @@
 
-using BuberDinner.Api.Common.Errors;
-using BuberDinner.Api.Filters;
-using BuberDinner.Api.Middleware;
+using BuberDinner.Api;
 using BuberDinner.Application;
 using BuberDinner.Infrastructure;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
+        .AddPresentation()
         .AddInfrastructure(builder.Configuration)
         .AddApplication();
     
-    builder.Services.AddControllers(options =>
-    {
-        // Second approach of global error handling.
-        // Add globaly doesnt need to be added to every single each controller/method.
-        // options.Filters.Add<ErrorHandlingFilterAttribute>();
-    });
-    //Override default problemsFactory for third approach.
-    builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
+    // builder.Services.AddControllers(options =>
+    // {
+    //     // Second approach of global error handling.
+    //     // Add globaly doesnt need to be added to every single each controller/method.
+    //     // options.Filters.Add<ErrorHandlingFilterAttribute>();
+    // });
+    // //Override default problemsFactory for third approach.
+    // builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
 }
 
 

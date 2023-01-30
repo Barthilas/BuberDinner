@@ -29,7 +29,9 @@ namespace BuberDinner.Application.Authentication.Commands.Login
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
-              if (_userRepository.GetUserByEmail(query.Email) is not User user)
+            // get rid of warning.
+            await Task.CompletedTask;
+            if (_userRepository.GetUserByEmail(query.Email) is not User user)
                 // throw new Exception("User with email does not exist.");
                 return Domain.Common.Errors.Errors.Authentication.InvalidCredentials;
 
