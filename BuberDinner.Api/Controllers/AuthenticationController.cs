@@ -16,6 +16,7 @@ using ErrorOr;
 using FluentResults;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OneOf;
@@ -23,6 +24,7 @@ using OneOf;
 namespace BuberDinner.Api.Controllers
 {
     [Route("auth")]
+    [AllowAnonymous]
     // [ErrorHandlingFilter]
     public class AuthenticationController : ApiController
     {

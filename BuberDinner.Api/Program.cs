@@ -36,6 +36,9 @@ var app = builder.Build();
     //     return Results.Problem();
     // });
 
+    app.UseAuthentication();
+    app.UseAuthorization();
+
     app.UseHttpsRedirection();
 
     app.MapControllers();

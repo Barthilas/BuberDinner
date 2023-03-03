@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using BuberDinner.Api.Common.Http;
 using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BuberDinner.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ApiController : ControllerBase
@@ -17,7 +19,7 @@ namespace BuberDinner.Api.Controllers
         {
             if (errors.Count is 0)
                 return Problem();
-            
+
             if (errors.All(error => error.Type == ErrorType.Validation))
                 return ValidationProblem(errors);
 
