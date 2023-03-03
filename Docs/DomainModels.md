@@ -13,3 +13,5 @@
 ```
 
 > Note: Passwords should not be laying around like this.
+>
+> All Domain models: https://gist.github.com/amantinband/425ffc6b82e41610369e51e9d2827e4c
